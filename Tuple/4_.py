@@ -1,5 +1,5 @@
 # 4
-#create empty tupples
+#create empty tupple
 s=(1)
 t=()
 print(t)
