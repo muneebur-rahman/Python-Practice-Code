@@ -4,6 +4,6 @@
 t=tuple()
 totalvalue=int(input("How many element u enter in tupple : "))
 for i in range(totalvalue):
-    val=int(input(f"Enter element {i} :"))
+    val=int(input(f"Enter element {i+1} : "))
     t=t+(val,)
 print(t)
