@@ -18,8 +18,8 @@ def count_case(s):
     print("No. of Upper case characters :", upper)
     print("No. of Lower case Characters :", lower)
 
-# Sample String
+
 sample = "The quick Brow Fox"
 
-# Function call
+
 count_case(sample)

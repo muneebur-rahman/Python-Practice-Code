@@ -6,6 +6,6 @@ def check_range(num, start, end):
     else:
         return False
 
-# Example
+
 print(check_range(5, 1, 10))   # True
 print(check_range(15, 1, 10))  # False
