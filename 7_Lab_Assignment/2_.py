@@ -7,7 +7,7 @@ def sum_list(numbers):
         total += num
     return total
 
-# Sample List
+
 sample = [8, 2, 3, 0, 7]
 
 # Function call
