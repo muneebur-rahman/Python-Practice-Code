@@ -1,53 +1,96 @@
-class Leaderboard:
-    def __init__(self):
-        self.scores = {}   # Dictionary to store player scores
+# Real-Time Leaderboard System
 
-    # Add or Update player
-    def add_update_player(self, name, score):
-        self.scores[name] = score
-        print("Score updated successfully!")
-
-    # Display Top K players
-    def show_top_k(self, k):
-        if not self.scores:
-            print("Leaderboard is empty!")
-            return
-
-        # Sort players by score (highest first)
-        sorted_players = sorted(self.scores.items(), key=lambda x: x[1], reverse=True)
-
-        print("\n--- Leaderboard ---")
-        for i in range(min(k, len(sorted_players))):
-            name, score = sorted_players[i]
-            print(f"{i+1}. {name} - {score}")
-        print("-------------------\n")
+# Project Statement:
+# Design a leaderboard system using heaps and hashing to maintain real-time rankings.
 
 
-# ---------------------------
-# Main Program
-# ---------------------------
+import tkinter as tk
+from tkinter import ttk, messagebox
 
-lb = Leaderboard()
+# Store data
+scores = {}
 
-while True:
-    print("1. Add/Update Player")
-    print("2. Show Top K Players")
-    print("3. Exit")
+def add_score():
+    name = name_entry.get()
+    try:
+        score = int(score_entry.get())
 
-    choice = input("Enter your choice: ")
+        if name in scores:
+            scores[name] += score
+        else:
+            scores[name] = score
 
-    if choice == "1":
-        name = input("Enter player name: ")
-        score = int(input("Enter score: "))
-        lb.add_update_player(name, score)
+        update_table()
 
-    elif choice == "2":
-        k = int(input("Enter value of K: "))
-        lb.show_top_k(k)
+        name_entry.delete(0, tk.END)
+        score_entry.delete(0, tk.END)
 
-    elif choice == "3":
-        print("Exiting program...")
-        break
+    except:
+        messagebox.showerror("Error", "Enter valid score")
 
-    else:
-        print("Invalid choice! Try again...")
+def update_table(data=None):
+    # clear table
+    for row in tree.get_children():
+        tree.delete(row)
+
+    # use given data or full data
+    display_data = data if data else sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+    # insert into table
+    for i, (name, score) in enumerate(display_data):
+        tree.insert("", "end", values=(i+1, name, score))
+
+def search_player():
+    keyword = search_entry.get().lower()
+    
+    filtered = [(name, score) for name, score in scores.items() if keyword in name.lower()]
+    
+    # sort filtered data
+    filtered = sorted(filtered, key=lambda x: x[1], reverse=True)
+    
+    update_table(filtered)
+
+def reset_table():
+    search_entry.delete(0, tk.END)
+    update_table()
+
+def clear_all():
+    scores.clear()
+    update_table()
+
+# Window
+root = tk.Tk()
+root.title("Leaderboard with Search")
+root.geometry("420x400")
+
+# Input
+tk.Label(root, text="Name").pack()
+name_entry = tk.Entry(root)
+name_entry.pack()
+
+tk.Label(root, text="Score").pack()
+score_entry = tk.Entry(root)
+score_entry.pack()
+
+tk.Button(root, text="Add Score", command=add_score).pack(pady=5)
+
+# Search
+tk.Label(root, text="Search Player").pack()
+search_entry = tk.Entry(root)
+search_entry.pack()
+
+tk.Button(root, text="Search", command=search_player).pack(pady=3)
+tk.Button(root, text="Reset", command=reset_table).pack(pady=3)
+
+tk.Button(root, text="Clear All", command=clear_all).pack(pady=5)
+
+# Table
+columns = ("Rank", "Name", "Score")
+tree = ttk.Treeview(root, columns=columns, show="headings")
+
+for col in columns:
+    tree.heading(col, text=col)
+
+tree.pack(pady=10)
+
+root.mainloop()
